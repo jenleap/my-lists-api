@@ -1,2 +1,20 @@
+### Create new user
+POST http://localhost:3003/user
+content-type: application/json
+
+{   
+    "username": "testuser1",
+    "password": "password123"
+}
+
+### Sign in user
+POST http://localhost:3003/signin
+content-type: application/json
+
+{   
+    "username": "testuser1",
+    "password": "password123"
+}
+
 ### Get all lists
 GET http://localhost:3003/api/lists
