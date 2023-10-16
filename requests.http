@@ -1,0 +1,2 @@
+### Get all lists
+GET http://localhost:3003/api/lists
