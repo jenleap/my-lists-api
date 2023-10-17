@@ -1,5 +1,5 @@
 import prisma from "../db";
-import { getUser } from "./user";
+import { sendUnauthorized } from "../utils/auth";
 
 export const getLists = async (req, res) => {
     const lists = await prisma.usersOnLists.findMany({
@@ -78,10 +78,4 @@ export const deleteList = async (req, res) => {
     return res.json({ data: deletedList });
 };
 
-const sendUnauthorized = (res) => {
-    res.status(401);
-    res.json({
-        message: "User is unauthorized for this function"
-    });
-    return res;
-}
+
