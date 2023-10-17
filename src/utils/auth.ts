@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import config from '../config';
 
 export const validatePassword = (password, hashedPass) => {
     return bcrypt.compare(password, hashedPass);
@@ -13,7 +14,7 @@ export const createJwt = (user) => {
     const token = jwt.sign({
         id: user.id,
         username: user.username
-    }, process.env.JWT_SECRET);
+    }, config.jwtSecret);
     return token;
 };
 
@@ -31,7 +32,7 @@ export const authenticateUser = (req, res, next) => {
     }
 
     try {
-        const user = jwt.verify(token, process.env.JWT_SECRET);
+        const user = jwt.verify(token, config.jwtSecret);
         req.user = user;
         next();
     } catch (e) {
