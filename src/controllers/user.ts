@@ -33,3 +33,18 @@ export const signIn = async (req, res) => {
     const token = createJwt(user);
     return res.json({ token });
 };
+
+export const getUser = async (id) => {
+    const user = await prisma.user.findUnique({
+        where: {
+            id
+        }
+    });
+
+    if (!user) {
+        return null;
+    } else {
+        return user;
+    }
+};
+
