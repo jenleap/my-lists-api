@@ -6,11 +6,11 @@ COPY package*.json ./
 
 RUN npm install 
 
+COPY . .
+
 RUN npx prisma init
 
 RUN npx prisma generate
-
-COPY . .
 
 EXPOSE 3001
 
