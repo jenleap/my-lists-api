@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import { authenticateUser } from './utils/auth';
 import { createNewUser, signIn } from './controllers/user';
+import config from './config';
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
+    console.log("TEST:", config.jwtSecret);
     res.status(200);
     res.json({ message: "Test route works."});
     return res;

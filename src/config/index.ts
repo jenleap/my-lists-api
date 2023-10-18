@@ -11,8 +11,5 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 export default merge({
-    env: process.env.NODE_ENV,
-    dbUrl: process.env.PG_DATABASE_URL,
-    jwtSecret: process.env.JWT_SECRET,
-    port: process.env.PORT
+    env: process.env.NODE_ENV
 }, envConfig);
