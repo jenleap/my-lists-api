@@ -48,3 +48,14 @@ export const getUser = async (id) => {
     }
 };
 
+export const getUsers = async (req, res) => {
+    const lists = await prisma.user.findMany({
+        select: {
+            username: true,
+            id: true
+        }
+    });
+
+    return res.json({ data: lists });
+};
+

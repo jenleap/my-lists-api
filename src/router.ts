@@ -3,6 +3,8 @@ import { body } from 'express-validator';
 import { checkUserAuthorizedOnList, handleInputErrors } from './utils/middleware';
 import { createList, deleteList, getList, getLists, updateList } from './controllers/list';
 import { createItem, deleteItem, updateItem } from './controllers/item';
+import { confirmInvite, createInvite, getInvites } from './controllers/invite';
+import { getUsers } from './controllers/user';
 
 const router = Router();
 
@@ -36,19 +38,28 @@ router.put('/items/:listId/:id',
 );
 
 router.delete('/items/:listId/:id', 
-    handleInputErrors,
     checkUserAuthorizedOnList, 
     deleteItem);
 
 // Invites
 
-router.get('/invites', () => {})
+router.get('/invites', getInvites);
 
-router.get('/invites/:id', () => {})
+router.post('/invites', 
+    body('userId').isString(),
+    body('listId').isString(),
+    body('note').isString(),
+    handleInputErrors,
+    createInvite);
 
-router.post('/invites', () => {})
+router.put('/invites/:id', 
+    body('accept').isBoolean(),
+    handleInputErrors,
+    confirmInvite);
 
-router.delete('/invites', () => {})
+// Users
+
+router.get('/users', getUsers);
 
 
 export default router;
