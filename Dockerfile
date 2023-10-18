@@ -8,6 +8,8 @@ RUN npm install
 
 RUN npx prisma init
 
+RUN npx prisma generate
+
 COPY . .
 
 EXPOSE 3001
