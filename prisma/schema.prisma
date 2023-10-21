@@ -7,12 +7,13 @@ generator client {
 
 datasource db {
   provider = "postgres"
-  url      = env("PG_DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 model User {
   id String @id @default(uuid())
   username String @unique
+  email String @unique
   password String
   lists List[]
   authorizedLists UsersOnLists[]
