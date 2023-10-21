@@ -61,6 +61,11 @@ router.put('/invites/:id',
 
 router.get('/users', getUsers);
 
+router.use((err, req, res, next) => {
+    console.log(err);
+    res.status(500).json({ message: "Oops!", error: err });
+});
+
 
 export default router;
 
