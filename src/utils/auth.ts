@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import config from '../config';
+const crypto = require('crypto');
 
 export const validatePassword = (password, hashedPass) => {
     return bcrypt.compare(password, hashedPass);
@@ -39,6 +40,10 @@ export const authenticateUser = (req, res, next) => {
         console.log(e);
         return sendUnauthorized(res);
     }
+};
+
+export const generateResetToken = () => {
+    return crypto.randomBytes(20).toString('hex');
 }
 
 export const sendUnauthorized = (res) => {
