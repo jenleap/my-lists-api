@@ -1,12 +1,17 @@
 import prisma from "../db";
-import { createJwt, hashPassword, validatePassword } from "../utils/auth";
+import nodemailer from 'nodemailer';
+import sendgridTransport from "nodemailer-sendgrid-transport";
+import { createJwt, generateResetToken, hashPassword, validatePassword } from "../utils/auth";
+import config from '../config';
+import { getMailOptions, transporter } from "../utils/mailer";
 
 export const createNewUser = async (req, res, next) => {
     try {
         const user = await prisma.user.create({
             data: {
                 username: req.body.username,
-                password: await hashPassword(req.body.password)
+                password: await hashPassword(req.body.password),
+                email: req.body.email
             }
         });
     
@@ -15,7 +20,6 @@ export const createNewUser = async (req, res, next) => {
     } catch (e) {
         next(e);
     }
-    
 };
 
 export const signIn = async (req, res, next) => {
@@ -53,6 +57,59 @@ export const getUsers = async (req, res, next) => {
         });
 
         return res.json({ data: lists });
+    } catch (e) {
+        next(e);
+    }
+};
+
+export const requestResetPassword = async (req, res, next) => {
+    try {
+        const { email } = req.body;
+        const resetToken = generateResetToken();
+
+        const updatedUser = await prisma.user.update({
+            where: { email },
+            data: { resetToken }
+        });
+
+        if (updatedUser) {
+            const resetLink = `${ config.clientUrl }/reset-password?token=${resetToken}`;
+            const mailOptions = getMailOptions(email, resetLink);
+            
+            transporter.sendMail(mailOptions, (error, info) => {
+                if (error) {
+                    console.error(error);
+                    res.status(500).json({ message: 'Failed to send email' });
+                } else {
+                    res.json({ message: 'Password reset link sent to your email' });
+                }
+            });
+            
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (e) {
+        next(e);
+    }
+};
+
+export const resetPassword = async (req, res, next) => {
+    try {
+        const { email, resetToken, newPassword } = req.body;
+
+        const updatedUser = await prisma.user.update({
+            where: { email, resetToken },
+            data: { 
+                password: await hashPassword(newPassword),
+                resetToken: null
+            }
+        });
+
+        if (updatedUser) {
+            return res.json({ message: 'Password reset successfully' });
+        } else {
+            res.status(403).json({ message: 'Invalid reset token or email' });
+        }
     } catch (e) {
         next(e);
     }

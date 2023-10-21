@@ -18,6 +18,7 @@ model User {
   lists List[]
   authorizedLists UsersOnLists[]
   invites Invite[]
+  resetToken String?
 }
 
 model List {
