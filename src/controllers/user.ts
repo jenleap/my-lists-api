@@ -1,18 +1,25 @@
 import prisma from "../db";
-import nodemailer from 'nodemailer';
-import sendgridTransport from "nodemailer-sendgrid-transport";
 import { createJwt, generateResetToken, hashPassword, validatePassword } from "../utils/auth";
 import config from '../config';
-import { getMailOptions, transporter } from "../utils/mailer";
+import { getResetMailOptions, getUserMailOptions, transporter } from "../utils/mailer";
 
 export const createNewUser = async (req, res, next) => {
+    const { username, email, password } = req.body;
     try {
         const user = await prisma.user.create({
             data: {
-                username: req.body.username,
-                password: await hashPassword(req.body.password),
-                email: req.body.email
+                username,
+                password: await hashPassword(password),
+                email
             }
+        });
+
+        const mailOptions = getUserMailOptions(email);
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error(error);
+            } 
         });
     
         const token = createJwt(user);
@@ -74,7 +81,7 @@ export const requestResetPassword = async (req, res, next) => {
 
         if (updatedUser) {
             const resetLink = `${ config.clientUrl }/reset-password?token=${resetToken}`;
-            const mailOptions = getMailOptions(email, resetLink);
+            const mailOptions = getResetMailOptions(email, resetLink);
             
             transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
@@ -84,7 +91,7 @@ export const requestResetPassword = async (req, res, next) => {
                     res.json({ message: 'Password reset link sent to your email' });
                 }
             });
-            
+
         } else {
             res.status(404).json({ message: 'User not found' });
         }

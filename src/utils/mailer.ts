@@ -8,10 +8,18 @@ export const transporter = nodemailer.createTransport(sendgridTransport({
     }
 }));
 
-export const getMailOptions = (email, resetLink) => {
+export const getResetMailOptions = (email, resetLink) => {
     return {
-        from: 'your@email.com',
+        from: config.sender,
         to: email,
         subject: 'Password Reset',
         text: `To reset your password, click the following link: ${resetLink}`,
+}};
+
+export const getUserMailOptions = (email) => {
+    return {
+        from: config.sender,
+        to: email,
+        subject: 'Welcome to My Lists!',
+        text: 'You have created a new user at My Lists.',
 }};

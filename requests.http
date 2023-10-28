@@ -3,8 +3,9 @@ POST http://localhost:3003/user
 content-type: application/json
 
 {   
-    "username": "testuser1",
-    "password": "password123"
+    "username": "testuser4",
+    "password": "password123",
+    "email": "user@email.com"
 }
 
 ### Sign in user
@@ -12,9 +13,109 @@ POST http://localhost:3003/signin
 content-type: application/json
 
 {   
-    "username": "testuser1",
-    "password": "password123"
+    "username": "testuser4",
+    "password": "password1234"
 }
+
+### Request reset password
+POST http://localhost:3003/request-reset
+content-type: application/json
+
+{   
+    "email": "test@user.com",
+    
+}
+
+### Reset password
+POST http://localhost:3003/reset
+content-type: application/json
+
+{   
+    "email": "test@user.com",
+    "resetToken": "99051dcd5ff6be9016c0401",
+    "newPassword": "password1234"
+}
+
+
 
 ### Get all lists
 GET http://localhost:3003/api/lists
+Authorization: Bearer 
+
+### Get list
+GET http://localhost:3003/api/lists/
+Authorization: Bearer 
+
+### Create list
+POST http://localhost:3003/api/lists
+content-type: application/json
+Authorization: Bearer 
+
+{
+    "name": "Test List II"
+}
+
+### Update list
+PUT http://localhost:3003/api/lists/
+content-type: application/json
+Authorization: Bearer 
+
+{
+    "name": "Test List II Updated"
+}
+
+### Delete list
+DELETE http://localhost:3003/api/lists/
+Authorization: Bearer 
+
+### Create item
+POST http://localhost:3003/api/items/
+content-type: application/json
+Authorization: Bearer 
+
+{
+    "label": "Test Item III",
+    "listId": "af475f8d-b33f-434e-b4c4-8bc3c7ca43d1"
+}
+
+### Update item
+PUT http://localhost:3003/api/items/ /
+content-type: application/json
+Authorization: Bearer 
+
+{
+    "label": "Test Item II Updated",
+    "checked": true
+}
+
+### Delete item
+DELETE http://localhost:3003/api/items/ /
+Authorization: Bearer 
+
+### Create invite
+POST http://localhost:3003/api/invites
+content-type: application/json
+Authorization: Bearer 
+
+{
+    "userId": "555b8501",
+    "listId": "af475f8d",
+    "note": "Please join my list!"
+}
+
+### Get all invites
+GET http://localhost:3003/api/invites
+Authorization: Bearer 
+
+### Accept invite
+PUT http://localhost:3003/api/invites/
+content-type: application/json
+Authorization: Bearer 
+
+{
+    "accept": true
+}
+
+### Get all users
+GET http://localhost:3003/api/users
+Authorization: Bearer 
